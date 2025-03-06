@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block title %} 
+- Settings
+{% endblock %}
+
+{% block content %}
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">General Settings</li>
+        </ol>
+    </nav>
+        
+    <div class="col-md-8 col-lg-8">
+      <h4 class="mb-3">Preferences</h4>
+        <div class="row g-3">
+            <label for="currencies-list" class="form-label">Currency <span class="mx-2 badge text-bg-dark">Current: $ {{ user_currency }}</span></label>
+            
+            <form action="{% url 'change-currency' %}" method="post">
+                {% csrf_token %}
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <select class="form-select" id="currencies-list" name="currency">
+
+                            {% for currency in currencies %}
+                                {% if user_currency == currency.symbol %}
+                                    <option selected value="{{ currency.symbol }}">{{ currency.name }} &lpar; {{ currency.symbol }} &rpar; </option>
+                                {% else %}    
+                                    <option value="{{ currency.symbol }}">{{ currency.name }} &lpar; {{ currency.symbol }} &rpar; </option>
+                                {% endif %} 
+                            {% endfor %}
+        
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <button class="btn btn-outline-secondary" type="submit">Save</button>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>   
+    </div>
+
+    <div class="col-md-8 col-lg-8 mt-3">
+        <h4 class="mb-3">Update Personal Information</h4>
+        <div class="row g-3">
+
+            <form action="{% url 'change-personal-particulars' %}" method="post" novalidate>
+                {% csrf_token %}
+            
+                <div class="form-group">
+                  <label for="usernameField">Username</label>
+                  <input type="text" class="form-control mb-2" id="usernameField" name="new-username" placeholder="John Doe" value="{{ user.username }}">
+                  <div id="validationServerUsernameFeedback"></div>
+                </div>
+            
+                <div class="form-group">
+                  <label for="emailField">Email address</label>
+                  <input type="email" class="form-control mb-2" id="emailField" name="new-email" placeholder="john.doe@example.com" value="{{ user.email }}">
+                  <div id="validationServerEmailFeedback"></div>
+                </div>
+            
+                <div class="form-group">
+                  <label for="passwordField">Old Password</label>
+                  <input type="password" class="form-control mb-2" id="oldPasswordField" name="old-password" placeholder="Old Password">
+                  <div id="validationServerOldPasswordFeedback"></div>
+                </div> 
+
+                <div class="form-group">
+                  <label for="passwordField">New Password</label>
+                  <input type="password" class="form-control mb-2" id="newPasswordField" name="new-password" placeholder="New Password">
+                  <div id="validationServerNewPasswordFeedback"></div>
+                </div> 
+
+                <div class="form-group">
+                  <label for="passwordField">Confirm New Password</label>
+                  <input type="password" class="form-control mb-2" id="cfmPasswordField" name="confirm-password" placeholder="Confirm New Password">
+                  <div id="validationServerConfirmPasswordFeedback"></div>
+                </div> 
+
+                <div class="col-md-2">
+                    <button class="btn btn-outline-secondary mt-3" type="submit">Update</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+        
+
+
+{% endblock %}

@@ -1,0 +1,37 @@
+#header {
+    background-color: #0d6efd;
+}
+
+caption {
+    background-color: #0d6efd !important;
+}
+
+#branding {
+    color: #f8f9fa;;
+}
+
+#user-tools {
+    color: #f8f9fa;
+    font-family: Arial;
+    font-size: 13px;
+}
+
+#admin-site-title {
+    color: #f8f9fa;
+    font-weight: 700;
+}
+
+div.breadcrumbs {
+    background-color: #102268;
+    color: #f8f9fa;
+    font-family: Arial;
+}
+
+input[type="submit"], input[type="button"], .submit-row input {
+    width: 100%;
+    background-color: #0d6efd;
+}
+
+.login #content, #footer {
+    background-color: #545454;
+}

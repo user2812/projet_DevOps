@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %} 
+- Add Expenses
+{% endblock %}
+
+{% block content %}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'expenses-index' %}">My Expenses</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Add Expenses</li>
+    </ol>
+</nav>
+
+<div class="col-md-8">
+    <form action="{% url 'add-expenses' %}" method="post" novalidate>
+
+        {% csrf_token %}
+
+        <div class="row mb-3">
+          <label for="amount" class="col-sm-2 col-form-label">Amount</label>
+          <div class="col-sm-10">
+            <div class="input-group mb-3">
+                <span class="input-group-text">$ {{ user_currency_symbol }}</span>
+                <input type="number" class="form-control" id="amount" name="amount" min="0" step=".01" value="{{ dict_fields.amount }}">
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label for="date" class="col-sm-2 col-form-label">Date</label>
+          <div class="col-sm-10">
+            <input type="date" class="form-control" id="date" name="date" max="{{ today }}" value="{{ dict_fields.date }}">
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label for="description" class="col-sm-2 col-form-label">Description</label>
+          <div class="col-sm-10">
+            <textarea class="form-control" placeholder="Enter expense description here." id="description" style="height: 100px" name="description">{{ dict_fields.description }}</textarea>
+          </div>
+        </div>
+
+        <fieldset class="row mb-3">
+          <legend class="col-form-label col-sm-2 pt-0">Category</legend>
+            <div class="col-sm-10">
+
+                {% for category_obj in categories %}
+
+                  {% if dict_fields.category == category_obj.category %}
+
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="category" id="category-{{ category_obj.category }}" value="{{ category_obj }}" checked>
+                      <label class="form-check-label" for="category-{{ category_obj.category }}">{{ category_obj.category }}</label>
+                    </div>
+
+                  {% else %}
+
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="category" id="category-{{ category_obj.category }}" value="{{ category_obj }}">
+                      <label class="form-check-label" for="category-{{ category_obj.category }}">{{ category_obj.category }}</label>
+                    </div>
+
+                  {% endif %}
+
+                
+                {% endfor %}
+            
+
+            </div>
+  
+        </fieldset>
+
+
+        <button type="submit" class="btn btn-primary">Add</button>
+    </form>
+
+</div>
+
+
+
+{% endblock %}

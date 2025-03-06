@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="container">
+
+  <!--Side bar-->
+    <div class="row g-5">
+      <div class="col-md-5 col-lg-4 order-md-last">
+        <h4 class="d-flex justify-content-between align-items-center mb-3">
+          <span class="text-primary">Recent Activity</span>
+          <span class="badge bg-primary rounded-pill">{{ recent_count }}</span>
+        </h4>
+
+        <ul class="list-group mb-3">
+
+          {% if recent_count == 0 %}
+            <li class="list-group-item d-flex justify-content-between lh-sm">
+              <div>
+                <h6 class="my-0">Nothing to show</h6>
+                <small class="text-muted">To get started, add an 
+                  <a href="{% url 'add-expenses'%}">expense</a> or 
+                  <a href="{% url 'add-income'%}">income</a> entry.
+                </small>
+              </div>
+            </li>
+          {% else %}
+            {% for obj in recent %}
+
+                {% if obj.category %}
+                  <li class="list-group-item d-flex justify-content-between lh-sm">
+                    <div>
+                      <h6 class="my-0 text-danger">{{ obj.category }}</h6>
+                      <small class="text-muted">{{ obj.date }}</small>
+                    </div>
+                    <span class="text-muted">-${{ obj.amount }}</span>
+                  </li>
+                {% endif %}
+
+                {% if obj.income_stream %}
+                  <li class="list-group-item d-flex justify-content-between lh-sm">
+                    <div>
+                      <h6 class="my-0 text-success">{{ obj.income_stream }}</h6>
+                      <small class="text-muted">{{ obj.date }}</small>
+                    </div>
+                    <span class="text-muted">+${{ obj.amount }}</span>
+                  </li>
+                {% endif %}
+          
+            {% endfor %}
+          {% endif %}
+
+        </ul>
+
+      </div>
+
+
+      <!--Chart-->
+      <div class="col-md-7 col-lg-8">
+        <h4 class="mb-3">Dashboard: Overview</h4>
+          <h6>Welcome back {{ request.user.username }}! </h6>
+          <canvas id="overview-chart" width="400" height="250" aria-label="Hello ARIA World" role="img"></canvas>
+      </div>
+
+</div>
+
+    <script src="{% static 'js/Chart.min.js' %}"></script>
+    <script src="{% static 'js/overview.js' %}"></script>
+
+{% endblock %}

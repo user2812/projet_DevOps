@@ -1,0 +1,18 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block branding %}
+
+<h1 id="head">
+    <img src="{% static 'img/kitty.png' %}" width="36px;" height="36px;">
+    <span id="admin-site-title">Fat Cat Admin</span>
+    
+</h1>
+
+
+{% endblock %}
+
+
+{% block extrastyle %}
+    <link rel="stylesheet" href="{% static 'css/adminstyle.css' %}">
+{% endblock %}

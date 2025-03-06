@@ -1,0 +1,47 @@
+{% extends 'base_auth.html' %}
+
+{% load static %}
+
+{% block title %} 
+- Sign in
+{% endblock %}
+
+{% block content %}
+
+  <form action="{% url 'register' %}" method="post" novalidate>
+
+    {% csrf_token %}
+
+    <h1 class="h3 mb-3 fw-normal">Register</h1>
+
+    <div class="form-group" id="flashMessages">{% include 'partial/messages.html' %}</div>
+
+    <div class="form-group">
+      <label for="usernameField">Username</label>
+      <input type="text" class="form-control" id="usernameField" name="username" placeholder="John Doe" value="{{ fieldValues.username }}">
+      <div id="validationServerUsernameFeedback"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="emailField">Email address</label>
+      <input type="email" class="form-control" id="emailField" name="email" placeholder="john.doe@example.com" value="{{ fieldValues.email }}">
+      <div id="validationServerEmailFeedback"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="passwordField">Password</label>
+      <input type="password" class="form-control" id="passwordField" name="password" placeholder="Password">
+      <small type="button" class="btn btn-link" style="float: right;" id="passwordToggle">SHOW</small>
+      <div id="validationServerPasswordFeedback"></div>
+    </div> 
+
+    <button class="w-100 btn btn-lg btn-primary" id="register-account-btn" type="submit">Register</button>
+</form>
+
+<div class="mt-3">Already have an account? <a href="{% url 'login' %}">Sign in</a></div>
+
+<script src="{% static 'js/register.js' %}"></script>
+{% endblock %}
+
+
+
