@@ -1,0 +1,139 @@
+{% extends 'base_auth.html' %}
+
+{% load static %}
+
+{% block title %} 
+- Login
+{% endblock %}
+
+{% block content %}
+
+<style>
+  /* Style général du formulaire */
+  form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Style du titre */
+  form h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+  }
+
+  /* Style des labels */
+  form label {
+    font-weight: bold;
+    color: #555;
+  }
+
+  /* Style des champs de saisie */
+  form .form-control {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+
+  /* Style du bouton de connexion */
+  form #login-account-btn {
+    background-color: #007bff;
+    border: none;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  form #login-account-btn:hover {
+    background-color: #0056b3;
+  }
+
+  /* Style du lien "Show" pour le mot de passe */
+  form #passwordToggle {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  form #passwordToggle:hover {
+    text-decoration: underline;
+  }
+
+  /* Style des liens en bas du formulaire */
+  form + div {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+  }
+
+  form + div a {
+    color: #007bff;
+    text-decoration: none;
+  }
+
+  form + div a:hover {
+    text-decoration: underline;
+  }
+
+  /* Style des messages flash */
+  #flashMessages {
+    margin-bottom: 20px;
+  }
+
+  /* Style de la case à cocher "Remember me" */
+  .checkbox label {
+    font-weight: normal;
+    color: #555;
+  }
+
+  .checkbox input[type="checkbox"] {
+    margin-right: 10px;
+  }
+</style>
+
+<form action="{% url 'login' %}" method="post" novalidate>
+  {% csrf_token %}
+
+  <h1 class="h3 mb-3 fw-normal">Sign in</h1>
+
+  <div class="form-group" id="flashMessages">{% include 'partial/messages.html' %}</div>
+
+  <div class="form-group">
+    <label for="usernameField">Username</label>
+    <input type="text" class="form-control" id="usernameField" name="username" placeholder="John Doe" value="{{ fieldValues.username }}">
+  </div>
+
+  <div class="form-group">
+    <label for="passwordField">Password</label>
+    <input type="password" class="form-control" id="passwordField" name="password" placeholder="Password">
+    <small type="button" class="btn btn-link" style="float: right;" id="passwordToggle">SHOW</small>
+  </div> 
+
+  <div class="checkbox mb-3">
+    <label>
+      <input type="checkbox" id="remember-me" name="remember-me" value="remember-me"> Remember me
+    </label>
+  </div>
+
+  <button class="w-100 btn btn-lg btn-primary" id="login-account-btn" type="submit">Sign in</button>
+</form>
+
+<div class="mt-3">New to CashFlow? <a href="{% url 'register' %}">Sign up</a></div>
+<div class="mb-3">Forgot password? <a href="{% url 'forgot-password' %}">Reset</a></div>
+
+<script src="{% static 'js/login.js' %}"></script>
+{% endblock %}

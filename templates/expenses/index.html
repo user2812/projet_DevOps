@@ -88,7 +88,7 @@
                 <a href="/expenses/?order_by=-category"><img src="{% static 'img/sort-alpha-down.svg' %}" width="16" height="16"/></a>
             </th>
             <th>
-                Amount &lpar; $ {{ user_currency_symbol }} &rpar; 
+                Amount &lpar; F CFA {{ user_currency_symbol }} &rpar; 
                 <a href="/expenses/?order_by=amount"><img src="{% static 'img/sort-numeric-up.svg' %}" width="16" height="16"/></a>
                 <a href="/expenses/?order_by=-amount"><img src="{% static 'img/sort-numeric-down.svg' %}" width="16" height="16"/></a>
             </th>
@@ -151,7 +151,7 @@
                     <div class="mb-3">
                         <label for="modal-amount" class="form-label">Amount</label>
                         <div class="input-group mb-3">
-                            <span class="input-group-text">$ {{ user_currency_symbol }}</span>
+                            <span class="input-group-text">F CFA  {{ user_currency_symbol }}</span>
                             <input type="number" class="form-control" id="modal-amount" name="modal-amount" min="0" step=".01">
                         </div>
                     </div>

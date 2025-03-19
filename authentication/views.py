@@ -121,11 +121,11 @@ class RegistrationView(View):
             verification_link = reverse('activate-user', kwargs={'uidb64' : uidb64_encoded, 'token' : token_generator.make_token(new_user)})
             full_url_link = str('http://'+current_site_domain+verification_link)
 
-            message_body = f"Welcome {new_user.username}!\n\nThanks for signing up with Fat Cat!\n\nYou must follow this link to activate your account: {full_url_link}"
+            message_body = f"Welcome {new_user.username}!\n\nThanks for signing up with CashFlow!\n\nYou must follow this link to activate your account: {full_url_link}"
 
             # Email Message
             activation_email = EmailMessage(
-                '[Fat Cat] Confirm Your E-mail Address', 
+                '[CashFlow] Confirm Your E-mail Address', 
                 message_body,
                 'lohzy@outlook.com',
                 [str(email)], 
@@ -171,7 +171,7 @@ class UserActivationView(View):
 
 class LoginView(View):
     def get(self, request):
-        return render(request, 'authentication/login.html')
+        return render(request, 'authentication/login_2.html')
 
     def post(self, request):
 
@@ -250,7 +250,7 @@ class ForgotPassword(View):
 
             # Email Message
             activation_email = EmailMessage(
-                '[Fat Cat] Reset Your Password', 
+                '[CashFlow] Reset Your Password', 
                 message_body,
                 os.environ.get('EMAIL_HOST_USER'),
                 [str(email)], 

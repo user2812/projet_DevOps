@@ -11,7 +11,7 @@ class Expense(models.Model):
     description = models.TextField(blank=True, null=True)
     
     def __str__(self) -> str:
-        return f"{self.user} spent ${self.amount} on {self.category}"
+        return f"{self.user} spent F CFA {self.amount} on {self.category}"
 
 class Category(models.Model):
     category = models.CharField(max_length=255, blank=False, null=False)

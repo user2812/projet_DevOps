@@ -14,7 +14,7 @@ class Income(models.Model):
         verbose_name_plural = 'Income'
     
     def __str__(self) -> str:
-        return f"{self.user} earned ${self.amount} from {self.income_stream}"
+        return f"{self.user} earned F CFA {self.amount} from {self.income_stream}"
 
 class IncomeStream(models.Model):
     income_stream = models.CharField(max_length=255, blank=False, null=False)
