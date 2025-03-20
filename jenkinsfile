@@ -1,0 +1,85 @@
+pipeline {
+    agent any
+    stages {
+        stage('Clone') {
+            steps {
+                git url: 'https://github.com/user2812/projet_DevOps.git                pipeline {
+                    agent any
+                    stages {
+                        stage('Clone') {
+                            steps {
+                                git url: 'https://github.com/user2812/projet_DevOps.git', branch: 'main'
+                            }
+                        }
+                        stage('Test') {
+                            steps {
+                                // Exécuter les tests unitaires avec pytest
+                                sh 'python -m pytest tests/'
+                                
+                                // Exécuter des tests supplémentaires (par exemple, tests d'intégration)
+                                sh 'python -m pytest integration_tests/'
+                            }
+                        }
+                        stage('Build Docker') {
+                            steps {
+                                sh 'docker build -t devops-app:latest .'
+                            }
+                        }
+                        stage('Deploy') {
+                            steps {
+                                sh 'docker run -d -p 5000:5000 --name devops-container devops-app:latest'
+                            }
+                        }
+                    }
+                    post {
+                        success {
+                            emailext (
+                                subject: 'SUCCÈS : Déploiement terminé',
+                                body: 'L’application est déployée avec succès.',
+                                to: 'gassama761@gmail.com'
+                            )
+                        }
+                        failure {
+                            emailext (
+                                subject: 'ÉCHEC : Pipeline Jenkins',
+                                body: 'Une erreur est survenue lors du déploiement.',
+                                to: 'gassama761@gmail.com'
+                            )
+                        }
+                    }
+                }', branch: 'main'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'python -m pytest tests/'
+            }
+        }
+        stage('Build Docker') {
+            steps {
+                sh 'docker build -t devops-app:latest .'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh 'docker run -d -p 5000:5000 --name devops-container devops-app:latest'
+            }
+        }
+    }
+    post {
+        success {
+            emailext (
+                subject: 'SUCCÈS : Déploiement terminé',
+                body: 'L’application est déployée avec succès.',
+                to: 'gassama761@gmail.com'
+ )
+        }
+        failure {
+            emailext (
+                subject: 'ÉCHEC : Pipeline Jenkins',
+                body: 'Une erreur est survenue lors du déploiement.',
+                to: 'gassama761@gmail.com'
+            )
+        }
+    }
+}
