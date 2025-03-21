@@ -2,8 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "fatimag-docker/django-app"
-        DOCKER_TAG = "latest"
+        DOCKER_TAG = "${env.GIT_COMMIT}"
     }
 
     stages {
@@ -17,7 +16,8 @@ pipeline {
 
         stage('Tester l\'application') {
             steps {
-                sh 'python manage.py test'
+                 sh "docker run --rm $DOCKER_IMAGE:$DOCKER_TAG python manage.py test"
+            }
             }
         }
 
