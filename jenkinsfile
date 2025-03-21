@@ -5,6 +5,15 @@ pipeline {
         DOCKER_IMAGE = "fatimag/image"
         DOCKER_TAG = "latest"
     }
+    stage('Installer les dépendances') {
+    steps {
+        bat """
+        if not exist venv python -m venv venv
+        call venv\\Scripts\\activate
+        pip install -r requirements.txt
+        """
+    }
+}
 
     stages {
         stage('Cloner le dépôt') {
