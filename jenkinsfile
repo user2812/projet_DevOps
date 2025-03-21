@@ -5,31 +5,27 @@ pipeline {
         DOCKER_IMAGE = "fatimag/image"
         DOCKER_TAG = "latest"
     }
+    stage('Installer les dépendances') {
+        steps {
+            bat """
+            if not exist venv python -m venv venv
+            call venv\\Scripts\\activate
+            pip install -r requirements.txt
+        """
+        }
+        }
 
     stages {
         stage('Cloner le dépôt') {
             steps {
-                git 'https://github.com/user2812/projet_DevOps.git'
+                git branch: 'main', url: 'https://github.com/user2812/projet_DevOps.git'
             }
         }
 
-        stage('Installer les dépendances') {
-            steps {
-                bat """
-                if exist venv rmdir /s /q venv
-                python -m venv venv
-                call venv\\Scripts\\activate && python -m pip install --upgrade pip
-                call venv\\Scripts\\activate && pip install -r requirements.txt
-                """
-            }
-        }
 
         stage('Tester l\'application') {
             steps {
-                bat """
-                call venv\\Scripts\\activate
-                python manage.py test
-                """
+                bat "call venv\\Scripts\\activate && python manage.py test"
             }
         }
 
@@ -48,13 +44,18 @@ pipeline {
                 """
             }
         }
+    }
 
-        stage('Notifier par email') {
-            steps {
-                emailext subject: "Déploiement Jenkins terminé",
-                        body: "Le déploiement de l'application Django est terminé avec succès.",
-                        to: 'gassama761@gmail.com'
-            }
+    post {
+        success {
+            emailext subject: "✅ Déploiement Réussi",
+                     body: "Le déploiement de l'application Django a réussi !",
+                     to: 'gassama761@gmail.com'
+        }
+        failure {
+            emailext subject: "❌ Échec du Déploiement",
+                     body: "Le pipeline Jenkins a échoué. Vérifie les logs.",
+                     to: 'gassama761@gmail.com'
         }
     }
 }
