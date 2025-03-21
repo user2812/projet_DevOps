@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = "fatimag-docker/django-app"
-        DOCKER_TAG = "${env.GIT_COMMIT}" // Utiliser le hash Git
+        DOCKER_TAG = "latest"
     }
 
     stages {
@@ -15,30 +15,30 @@ pipeline {
 
         stage('Construire l\'image Docker') {
             steps {
-                sh "docker build -t $DOCKER_IMAGE:$DOCKER_TAG ."
+                bat "docker build -t $DOCKER_IMAGE:$DOCKER_TAG ."
             }
         }
 
         stage('Tester l\'application') {
             steps {
-                sh "docker run --rm $DOCKER_IMAGE:$DOCKER_TAG python manage.py test"
+                bat "docker run --rm $DOCKER_IMAGE:$DOCKER_TAG python manage.py test"
             }
         }
 
         stage('Exécuter le conteneur') {
             steps {
-                sh """
-                docker stop django-container || true
-                docker rm django-container || true
-                docker run -d --name django-container -p 8000:8000 $DOCKER_IMAGE:$DOCKER_TAG
+                bat """
+                    docker stop django-container || echo "Aucun conteneur à arrêter"
+                    docker rm django-container || echo "Aucun conteneur à supprimer"
+                    docker run -d --name django-container -p 8000:8000 $DOCKER_IMAGE:$DOCKER_TAG
                 """
             }
         }
 
         stage('Notifier par email') {
             steps {
-                emailext subject: "Déploiement Jenkins terminé (${currentBuild.result})",
-                        body: "Statut : ${currentBuild.result}\nDétails : ${env.BUILD_URL}",
+                emailext subject: "Déploiement Jenkins terminé",
+                        body: "Le déploiement de l'application Django est terminé avec succès.",
                         to: 'gassama761@gmail.com'
             }
         }
