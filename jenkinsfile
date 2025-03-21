@@ -2,45 +2,51 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "fatimag-docker/django-app"
+        DOCKER_IMAGE = "fatimag/image"
         DOCKER_TAG = "latest"
     }
 
     stages {
         stage('Cloner le dépôt') {
             steps {
-                git branch: "main", url: 'https://github.com/user2812/projet_DevOps.git'
+                git branch: 'main', url: 'https://github.com/user2812/projet_DevOps.git'
+            }
+        }
+
+
+        stage('Tester l\'application') {
+            steps {
+                bat "call venv\\Scripts\\activate && python manage.py test"
             }
         }
 
         stage('Construire l\'image Docker') {
             steps {
-                bat "docker build -t $DOCKER_IMAGE:$DOCKER_TAG ."
-            }
-        }
-
-        stage('Tester l\'application') {
-            steps {
-                bat "docker run --rm $DOCKER_IMAGE:$DOCKER_TAG python manage.py test"
+                bat "docker build -t %DOCKER_IMAGE%:%DOCKER_TAG% ."
             }
         }
 
         stage('Exécuter le conteneur') {
             steps {
                 bat """
-                    docker stop django-container || echo "Aucun conteneur à arrêter"
-                    docker rm django-container || echo "Aucun conteneur à supprimer"
-                    docker run -d --name django-container -p 8000:8000 $DOCKER_IMAGE:$DOCKER_TAG
+                docker stop django-container || exit 0
+                docker rm django-container || exit 0
+                docker run -d --name django-container -p 8000:8000 %DOCKER_IMAGE%:%DOCKER_TAG%
                 """
             }
         }
+    }
 
-        stage('Notifier par email') {
-            steps {
-                emailext subject: "Déploiement Jenkins terminé",
-                        body: "Le déploiement de l'application Django est terminé avec succès.",
-                        to: 'gassama761@gmail.com'
-            }
+    post {
+        success {
+            emailext subject: "✅ Déploiement Réussi",
+                     body: "Le déploiement de l'application Django a réussi !",
+                     to: 'gassama761@gmail.com'
+        }
+        failure {
+            emailext subject: "❌ Échec du Déploiement",
+                     body: "Le pipeline Jenkins a échoué. Vérifie les logs.",
+                     to: 'gassama761@gmail.com'
         }
     }
 }
