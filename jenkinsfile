@@ -1,60 +1,39 @@
 pipeline {
-    agent any
-
-    environment {
-        DOCKER_IMAGE = "fatimag/image"
-        DOCKER_TAG = "latest"
-    }
+    agent any 
 
     stages {
-        stage('Cloner le dépôt') {
+        stage("Clone Code") {
             steps {
-                git 'https://github.com/user2812/projet_DevOps.git'
+                echo "Cloning the code"
+                git branch: 'main', url:'https://github.com/user2812/projet_DevOps.git'
             }
         }
 
-        stage('Installer les dépendances') {
+        stage("Build") {
             steps {
-                bat """
-                if exist venv rmdir /s /q venv
-                python -m venv venv
-                call venv\\Scripts\\activate && python -m pip install --upgrade pip
-                call venv\\Scripts\\activate && pip install -r requirements.txt
-                """
+                echo "Building the image"
+                bat 'docker build -t image .'
             }
         }
 
-        stage('Tester l\'application') {
+        stage("Deploy") {
             steps {
-                bat """
-                call venv\\Scripts\\activate
-                python manage.py test
-                """
+                echo "Deploying the container"
+                bat 'docker-compose down && docker-compose up -d'
             }
         }
+    }
 
-        stage('Construire l\'image Docker') {
-            steps {
-                bat "docker build -t %DOCKER_IMAGE%:%DOCKER_TAG% ."
-            }
+    post {
+        success {
+            emailext subject: "Pipeline réussi",
+                      body: "Le pipeline Jenkins a été exécuté avec succès.",
+                      to: 'gassama761@gmail.com'
         }
-
-        stage('Exécuter le conteneur') {
-            steps {
-                bat """
-                docker stop django-container || exit 0
-                docker rm django-container || exit 0
-                docker run -d --name django-container -p 8000:8000 %DOCKER_IMAGE%:%DOCKER_TAG%
-                """
-            }
-        }
-
-        stage('Notifier par email') {
-            steps {
-                emailext subject: "Déploiement Jenkins terminé",
-                        body: "Le déploiement de l'application Django est terminé avec succès.",
-                        to: 'gassama761@gmail.com'
-            }
+        failure {
+            emailext subject: "Pipeline échoué",
+                      body: "Le pipeline Jenkins a échoué. Veuillez vérifier les logs.",
+                      to: 'gassama761@gmail.com'
         }
     }
 }
